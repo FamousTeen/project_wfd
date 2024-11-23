@@ -30,5 +30,6 @@ class DatabaseSeeder extends Seeder
         $this->call(MisaPermissionSeeder::class);
         $this->call(TemplatePermissionSeeder::class);
         $this->call(TrainingDetailSeeder::class);
+        $this->call(SaldoSeeder::class);
     }
 }

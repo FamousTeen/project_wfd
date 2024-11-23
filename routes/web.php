@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Meet;
+use App\Models\Misa;
 use App\Models\Admin;
 use App\Models\Event;
 use App\Models\Account;
@@ -15,15 +17,15 @@ use App\Http\Controllers\MisaController;
 use App\Http\Resources\TrainingResource;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\SaldoController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MisaDetailController;
 use App\Http\Controllers\EventDetailController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\AnnouncementController;
-use App\Models\Meet;
-use App\Models\Misa;
 
 /*
 |--------------------------------------------------------------------------
@@ -357,3 +359,13 @@ Route::post('/store_training', [AdminController::class, 'storeTraining'])->name(
 Route::get('/input_anggota_pelatihan', function() {
     return view('/admin/training/input_anggota_pelatihan');
 })->name('input_anggota_pelatihan');
+
+// Remove the {accountId} parameter from the store route
+Route::post('/saldo', [SaldoController::class, 'store'])->name('saldo.store');
+
+Route::get('/saldo/{accountId}', [SaldoController::class, 'getSaldo']);
+
+Route::put('/saldo/{accountId}', [SaldoController::class, 'updateSaldo']);
+
+Route::get('/saldo', [SaldoController::class, 'index'])->name('saldo.index');
+
