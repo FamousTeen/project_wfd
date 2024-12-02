@@ -8,6 +8,8 @@ use App\Models\Account;
 use App\Models\Training;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\SaldoController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\EventResource;
 use Illuminate\Support\Facades\Route;
@@ -17,14 +19,13 @@ use App\Http\Controllers\MisaController;
 use App\Http\Resources\TrainingResource;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EventController;
-use App\Http\Controllers\SaldoController;
+use App\Http\Controllers\GroupController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MisaDetailController;
 use App\Http\Controllers\EventDetailController;
-use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\AnnouncementController;
 
 /*
@@ -81,19 +82,20 @@ Route::resource('events', EventController::class)->names([
 
 
 // buat pelatihan
-Route::resource('trainings', TrainingController::class)->except('edit')->names([
+Route::resource('trainings', TrainingController::class)->names([
     'index' => 'trainings.index',
     'create' => 'trainings.create',
     'store' => 'trainings.store',
     'show' => 'trainings.show',
-    'update' => 'trainings.update',
     'destroy' => 'trainings.destroy',
 ]);
 
 Route::get('/trainings/edit/{group}/{training}', [TrainingController::class, 'edit'])->name('trainings.edit');
+Route::put('/trainings/update/{group}/{training}', [TrainingController::class, 'update'])->name('trainings.update');
 
 //Jadwal Anggota
 Route::get('/jadwal', [MisaController::class, 'index'])->name('jadwal_anggota');
+Route::get('/search-misas', [MisaController::class, 'search'])->name('misas.search');
 
 //Dashboard
 // Route::get('/dashboard_anggota', [DashboardController::class, 'index'])->name('dashboard_anggota');
@@ -223,6 +225,7 @@ Route::get('/input_event', function () {
     $admins = Admin::where('id', '!=', $user->id)->get();
 
     return view('admin/input_event', [
+        'user' => $user,
         'accounts' => $accounts,
         'admins' => $admins
     ]);
@@ -267,7 +270,7 @@ Route::get('/events/search', function (string $detail) {
 });
 
 Route::put('/events/search/delete/{id}', function (string $id) {
-    $training = Event::where('id', (int)$id)->firstOrFail();
+    $training = Event::where('id', (int) $id)->firstOrFail();
     $training->update(['status' => 0]);
 
     return redirect()->route('events.index')->with('success', 'Pelatihan berhasil dihapus');
@@ -298,7 +301,7 @@ Route::get('/trainings/search/{detail}', function (string $detail) {
 });
 
 Route::put('/trainings/search/delete/{id}', function (string $id) {
-    $training = Training::where('id', (int)$id)->firstOrFail();
+    $training = Training::where('id', (int) $id)->firstOrFail();
     $training->update(['status' => 0]);
 
     return redirect()->route('trainings.index')->with('success', 'Pelatihan berhasil dihapus');
@@ -313,7 +316,8 @@ Route::get('/dokumen_pengurus', function () {
 //jadwal
 Route::get('/jadwal_pengurus', function () {
     $meets = Meet::where('permission', 1)->get();
-    return view('admin/khusus_pengurus/jadwal_pengurus', compact('meets'));
+    $user = Auth::guard('admin')->user();
+    return view('admin/khusus_pengurus/jadwal_pengurus', compact('meets', 'user'));
 })->name('jadwal_pengurus');
 
 
@@ -323,8 +327,12 @@ Route::put('updateMeetPengurus', [MeetController::class, 'updatePengurus'])->nam
 
 //jadwal_misa (konfirmasi admin)
 Route::get('/jadwal_misa', function () {
+    $user = Auth::guard('admin')->user();
     $misas = Misa::where('active', 1)->get();
-    return view('admin/jadwal_misa', compact('misas'));
+    return view('admin/jadwal_misa', [
+        'misas' => $misas,
+        'user' => $user
+    ]);
 })->name('jadwal_misa');
 
 //list evaluasi ( admin)
@@ -346,18 +354,14 @@ Route::get('/update_status_anggota/{id}', [AdminController::class, 'updateStatus
 Route::get('/delete_anggota/{id}', [AdminController::class, 'deleteAnggota'])->name('delete_anggota');
 
 //jadwal pelatihan(admin)
-Route::get('input_pelatihan', function() {
-    return view('admin/training/input_pelatihan');
+Route::get('input_pelatihan', function () {
+    $user = Auth::guard('admin')->user();
+    return view('admin/training/input_pelatihan', compact('user'));
 })->name('input_pelatihan');
 
-Route::get('/input_anggota_pelatihan', function() {
-    return view('/admin/training/input_anggota_pelatihan');
-})->name('input_anggota_pelatihan');
-
-Route::post('/store_training', [AdminController::class, 'storeTraining'])->name('store_training');
-
-Route::get('/input_anggota_pelatihan', function() {
-    return view('/admin/training/input_anggota_pelatihan');
+Route::get('/input_anggota_pelatihan', function () {
+    $user = Auth::guard('admin')->user();
+    return view('/admin/training/input_anggota_pelatihan', compact('user'));
 })->name('input_anggota_pelatihan');
 
 // Remove the {accountId} parameter from the store route
@@ -369,3 +373,36 @@ Route::put('/saldo/{accountId}', [SaldoController::class, 'updateSaldo']);
 
 Route::get('/saldo', [SaldoController::class, 'index'])->name('saldo.index');
 
+Route::post('/store_training', [AdminController::class, 'storeTraining'])->name('store_training');
+
+
+Route::get('/input_anggota_pelatihan', [GroupController::class, 'inputAnggotaPelatihan'])
+    ->name('input_anggota_pelatihan');
+
+
+Route::post('/add-group', [GroupController::class, 'store'])->name('groups.store');
+Route::post('/groups/{group}/members', [GroupController::class, 'addMember'])->name('groups.addMember');
+Route::put('/groups/{group}/update-members', [GroupController::class, 'updateMembers'])->name('groups.updateMembers');
+Route::delete('/groups/{group}', [GroupController::class, 'destroy'])->name('groups.destroy');
+
+/* DOKUMENTASI */
+// dokumentasi page
+Route::get('/admin/input_dokumentasi', function () {
+    $user = Auth::guard('admin')->user();
+    return view('admin/input_foto', compact('user'));
+})->name('documentations');
+// end dokumentasi page
+
+// insert dokumentasi
+Route::post('/admin/insert', [AdminController::class, 'insertDokumentasi'])->name('insert_photos');
+// end insert dokumentasi
+
+// delete dokumentasi
+Route::get('/admin/delete_dokumentasi/{id}', [AdminController::class, 'deleteDokumentasi'])->name('delete_dokumentasi');
+// end delete dokumentasi
+
+/* END DOKUMENTASI */
+
+Route::get('/groups/members/{group}', [GroupController::class, 'getAvailableMembers'])->name('groups.availableMembers');
+Route::get('/groups/create', [GroupController::class, 'create'])->name('groups.create'); // Show the create group modal
+Route::get('/groups/{groupId}/details', [GroupController::class, 'getDetails']);

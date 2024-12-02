@@ -9,12 +9,12 @@
 
 @section('content')
     <!-- Colors:
-                                    1. #740001 - merah gelap
-                                    2. #ae0001 - merah terang
-                                    3. #f6f1e3 - netral
-                                    4. #002366 - biru terang
-                                    5. #20252f - biru gelap
-                                -->
+                                                1. #740001 - merah gelap
+                                                2. #ae0001 - merah terang
+                                                3. #f6f1e3 - netral
+                                                4. #002366 - biru terang
+                                                5. #20252f - biru gelap
+                                            -->
 
     <div class="container-fluid content-body mx-12 ">
         @php
@@ -68,8 +68,7 @@
                                     <p>Tempat Pelatihan : {{ $training->place }}</p>
                                 </div>
                                 <div class="flex items-end justify-end space-x-2 mt-4">
-                                    <a href="{{ route('trainings.edit', [$training, $g]) }}"><button
-                                            type="button"
+                                    <a href="{{ route('trainings.edit', [$training, $g]) }}"><button type="button"
                                             class="px-6 py-2 bg-[#002366] hover:bg-[#20252f] text-white rounded-lg">Edit</button></a>
                                     <div class="">
                                         <form class="mb-0"

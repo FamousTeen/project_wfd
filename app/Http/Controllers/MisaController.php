@@ -32,7 +32,8 @@ class MisaController extends Controller
             ->keyBy('account_id'); // Key the result by account_id for easier access
 
         if (Auth::guard('admin')->check()) {
-            return view('admin/input_misa', compact('accounts', 'dutyCounts'));
+            $user = Auth::guard('admin')->user();
+            return view('admin/input_misa', compact('accounts', 'dutyCounts', 'user'));
         } elseif (Auth::guard('account')->check()) {
             $user = Auth::guard('account')->user();
             $userData = Account::query()->where(
@@ -40,9 +41,8 @@ class MisaController extends Controller
                 $user->email
             )->where('password', $user->password)->firstOrFail();
 
-            $misas = Misa::with('misaDetails')->whereHas('misaDetails', function ($query) use ($userData) {
-                $query->where('account_id', $userData->id);
-            })->get();
+            // Fetch all misas, no restriction
+            $misas = Misa::with('misaDetails')->get();
 
             return view('anggota/jadwal', [
                 'misas' => $misas,
@@ -52,6 +52,7 @@ class MisaController extends Controller
             ]);
         }
     }
+
 
 
     /**
@@ -240,34 +241,34 @@ class MisaController extends Controller
     public function showMisaList()
     {
         $user = null;
-    
+
         if (Auth::guard('admin')->check()) {
             $user = Auth::guard('admin')->user();
             $misas = Misa::where('active', 1)->with('misaDetails')->get();
-    
+
             // Loop through each misa to update its status
             foreach ($misas as $misa) {
                 // Count the number of members with confirmation = 0
                 $pendingCount = $misa->misaDetails->where('confirmation', 0)->count();
-    
+
                 // Check if all members have confirmation = 1
                 $allConfirmed = $misa->misaDetails->every(function ($detail) {
                     return $detail->confirmation == 1;
                 });
-    
+
                 // Ensure deadline is parsed correctly
                 $deadline = Carbon::parse($misa->deadline_datetime);
-    
+
                 // Check if deadline has passed
                 $deadlinePassed = Carbon::now()->greaterThan($deadline);
-    
+
                 // Debugging output to check the current time and deadline time
                 logger("Current time: " . Carbon::now());
                 logger("Misa deadline: " . $deadline);
                 logger("Deadline passed? " . ($deadlinePassed ? 'Yes' : 'No'));
                 logger("Pending count: " . $pendingCount);
                 logger("All confirmed? " . ($allConfirmed ? 'Yes' : 'No'));
-    
+
                 // Set the status based on conditions
                 if ($pendingCount > 0 && $deadlinePassed) {
                     $status = "Tertunda"; // If deadline has passed and there are pending confirmations
@@ -278,40 +279,40 @@ class MisaController extends Controller
                 } else {
                     $status = "Proses"; // Default status if still in progress
                 }
-    
+
                 // Update the misa status in the database
                 $misa->status = $status;
                 $misa->save();  // Save the updated status to the database
             }
-    
+
             return view('admin.jadwal_misa', [
                 'user' => $user,
                 'misas' => $misas
             ]);
         } elseif (Auth::guard('account')->check()) {
             $user = Auth::guard('account')->user();
-    
+
             $userData = Account::query()
                 ->where('email', $user->email)
                 ->where('password', $user->password)
                 ->firstOrFail();
-    
+
             $misas = Misa::query()->where('active', 1)->with('misaDetails')->get();
-    
+
             // Loop through each misa to update its status
             foreach ($misas as $misa) {
                 $pendingCount = $misa->misaDetails->where('confirmation', 0)->count();
-    
+
                 $allConfirmed = $misa->misaDetails->every(function ($detail) {
                     return $detail->confirmation == 1;
                 });
-    
+
                 // Ensure deadline is parsed correctly
                 $deadline = Carbon::parse($misa->deadline_datetime);
-    
+
                 // Check if deadline has passed
                 $deadlinePassed = Carbon::now()->greaterThan($deadline);
-    
+
                 // Set the status based on conditions
                 if ($pendingCount > 0 && $deadlinePassed) {
                     $status = "Tertunda"; // If deadline has passed and there are pending confirmations
@@ -322,18 +323,18 @@ class MisaController extends Controller
                 } else {
                     $status = "Proses"; // Default status if still in progress
                 }
-    
+
                 $misa->status = $status;
                 $misa->save(); // Update status in the database
             }
-    
+
             return view('anggota.jadwal', [
                 'misas' => $misas,
                 'user' => $userData
             ]);
         }
     }
-    
+
 
     public function addAnggota(Request $request, Misa $misa)
     {
@@ -354,5 +355,27 @@ class MisaController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Anggota berhasil ditambahkan');
+    }
+
+
+    
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+
+        // Search for misa records by title (you can extend this to other fields)
+        $misas = Misa::where('title', 'like', '%' . $query . '%')
+            ->orWhere('category', 'like', '%' . $query . '%')
+            ->get();
+
+        // Return the misa data in the required format (including misa details)
+        $misas = $misas->map(function ($misa) {
+            // Include misa details and related account data
+            $misa->misaDetails = $misa->misaDetails()->with('account')->get();
+            return $misa;
+        });
+
+        return response()->json($misas);
     }
 }

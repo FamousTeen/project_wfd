@@ -21,8 +21,6 @@ class SaldoController extends Controller
 }
 
 
-
-    
 public function store(Request $request)
 {
     // Validate the input

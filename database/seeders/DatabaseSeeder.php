@@ -31,5 +31,6 @@ class DatabaseSeeder extends Seeder
         $this->call(TemplatePermissionSeeder::class);
         $this->call(TrainingDetailSeeder::class);
         $this->call(SaldoSeeder::class);
+        $this->call(DocumentationSeeder::class);
     }
 }

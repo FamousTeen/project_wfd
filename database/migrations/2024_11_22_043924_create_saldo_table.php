@@ -17,7 +17,6 @@ return new class extends Migration
         $table->decimal('amount', 10, 2)->default(0);
         $table->timestamps();
         $table->foreign('account_id')->references('id')->on('accounts')->onDelete('cascade');
-
     });
 }
 

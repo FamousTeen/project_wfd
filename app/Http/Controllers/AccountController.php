@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Requests\UpdateAccountRequest;
+use App\Models\Saldo;
 
 class AccountController extends Controller
 {
@@ -151,6 +152,8 @@ class AccountController extends Controller
 
         // Fetch data specific to account user
         $dashboardData = Account::find($user->id);
+
+        $saldo = Saldo::where('user_id', $user->id)->sum('');
 
         // Pass the data to the account dashboard view
         return view('anggota.dashboard', [

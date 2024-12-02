@@ -26,8 +26,12 @@ class AnnouncementController extends Controller
      */
     public function create()
     {
-        $announcement = Announcement::get()->where('type', 0)->where('status', 1);
-        return view('admin.post_pengumuman')->with('announcements', $announcement);
+        $user = Auth::guard('admin')->user();
+        $announcements = Announcement::get()->where('type', 0)->where('status', 1);
+        return view('admin.post_pengumuman', [
+            'announcements' => $announcements,
+            'user' => $user
+        ]);
     }
 
     /**
@@ -67,8 +71,9 @@ class AnnouncementController extends Controller
      */
     public function showForPengurus(Announcement $announcement)
     {
+        $user = Auth::guard('admin')->user();
         $announcement = Announcement::get()->where('type', 1)->where('status', 1);
-        return view('admin.khusus_pengurus.pengumuman_pengurus')->with('announcement', $announcement);
+        return view('admin.khusus_pengurus.pengumuman_pengurus', compact('announcement', 'user'));
     }
 
     /**

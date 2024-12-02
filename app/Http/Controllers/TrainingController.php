@@ -6,8 +6,9 @@ use App\Models\Account;
 use App\Models\Training;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreTrainingRequest;
-use App\Http\Requests\UpdateTrainingRequest;
 use App\Models\Group;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TrainingController extends Controller
 {
@@ -81,22 +82,38 @@ class TrainingController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateTrainingRequest $request, Training $training)
+    public function update(Request $request, $g, $training)
     {
-        $request->validate([
-            'date' => 'required|date',
+        $data = $request->all();
+        $formfield = Validator::make($data, [
+            'group' => 'required',
+            'place' => 'required',
+            'date' => 'required',
+            'time' => 'required',
             'contact_person' => 'required',
             'phone_number' => 'required',
-            'place' => 'required'
+            'description' => 'required',
         ]);
 
-        $training->update([
-            'training_date' => $request->date,
-            'contact_person' => $request->contact_person,
-            'phone_number' => $request->phone_number,
-            'place' => $request->place,
-            'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
-        ]);
+        if ($formfield->fails()) {
+            return redirect()->back()->withErrors($formfield)->withInput();
+        }
+
+        $trainings = Training::find($training);
+        $training_data = [
+            'place' => $data['place'],
+            'training_date' => Carbon::parse($data['date'] . ' ' . $data['time']),
+            'contact_person' => $data['contact_person'],
+            'phone_number' => $data['phone_number'],
+            'description' => $data['description'],
+        ];
+        $trainings->update($training_data);
+
+        $group = Group::find($g);
+        $group_data = [
+            'name' => $data['group']
+        ];
+        $group->update($group_data);
 
         return redirect()->route('trainings.index')->with('success', 'Pelatihan berhasil diupdate.');
     }

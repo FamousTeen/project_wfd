@@ -2,12 +2,12 @@
 
 @section('content')
     <!-- Colors:
-                                    1. #740001 - merah gelap
-                                    2. #ae0001 - merah terang
-                                    3. #f6f1e3 - netral
-                                    4. #002366 - biru terang
-                                    5. #20252f - biru gelap
-                                -->
+                                            1. #740001 - merah gelap
+                                            2. #ae0001 - merah terang
+                                            3. #f6f1e3 - netral
+                                            4. #002366 - biru terang
+                                            5. #20252f - biru gelap
+                                        -->
 
     <div class="container-fluid content-body mx-12 ">
         @php
@@ -18,8 +18,8 @@
             Carbon::setLocale('id');
         @endphp
         <h1 class="text-3xl">Edit Jadwal Pelatihan</h1>
-        <form class="mt-6 rounded-xl py-6 pe-6 ms-5 flex bg-[#f6f1e3]" method="POST" action=""
-            enctype="multipart/form-data">
+        <form class="mt-6 rounded-xl py-6 pe-6 ms-5 flex bg-[#f6f1e3]" method="POST"
+            action="{{ route('trainings.update', [$group, $training]) }}">
             @csrf
             @method('put')
             <div class="grid ms-10 gap-4 grid-cols-2 w-full">
@@ -103,9 +103,10 @@
                     <label for="notes" class="mt-2">
                         Catatan
                     </label>
-                    <textarea id="notes" name="notes" rows="4"
+                    <textarea id="eventDesc0" name="description" rows="4"
                         class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Tulis catatan jika diperlukan"></textarea>
+                        placeholder="Tulis catatan jika diperlukan" oninput="readTextarea2()">{!! nl2br(e(urldecode($training->description))) !!}</textarea>
+                    <input type="hidden" name="eventDesc" id="eventDesc00"></input>
                 </div>
 
                 <div class="flex col-span-2 mt-4 items-start justify-center">
@@ -130,5 +131,11 @@
             console.log(MarginTop);
             $(".content-body").css("margin-top", MarginTop);
         });
+
+        function readTextarea2() {
+            const textareaValue = document.getElementById(`eventDesc0`).value;
+            document.getElementById(`eventDesc00`).value = encodeURIComponent(textareaValue);
+            console.log(document.getElementById(`eventDesc00`).value);
+        }
     </script>
 @endsection

@@ -18,7 +18,8 @@ class Group extends Model
     public function training(): BelongsTo {
         return $this->belongsTo(Training::class);
     }
-
+    
+    
     public function groupDetails(): HasMany {
         return $this->hasMany(GroupDetail::class);
     }

@@ -9,6 +9,7 @@ use App\Models\Training;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreAdminRequest;
+use App\Models\Documentation;
 use App\Models\Group;
 use Illuminate\Support\Facades\Validator;
 
@@ -61,13 +62,15 @@ class AdminController extends Controller
         return view('admin/list_anggota')->with('list_anggota', $list_anggota);
     }
 
-    public function deleteAnggota($id) {
+    public function deleteAnggota($id)
+    {
         $id = Account::find($id);
         $id->delete();
         return redirect()->route('list_anggota')->with('success', 'Data berhasil dihapus');
     }
 
-    public function updateStatusAnggota($id) {
+    public function updateStatusAnggota($id)
+    {
         $id = Account::find($id);
         if ($id->status == 1) {
             $id->update(['status' => 0]);
@@ -77,7 +80,8 @@ class AdminController extends Controller
         return json_encode($id->status);
     }
 
-    public function storeTraining(Request $request) {
+    public function storeTraining(Request $request)
+    {
         $data = $request->all();
         $admin = Auth::guard('admin')->user();
         $formfield = Validator::make($data, [
@@ -89,7 +93,7 @@ class AdminController extends Controller
             'phone_number' => 'required',
             'description' => 'required',
         ]);
-        
+
         if ($formfield->fails()) {
             return back()->withErrors($formfield)->withInput();
         }
@@ -108,7 +112,7 @@ class AdminController extends Controller
         $pelatihan = Training::create($training);
         Group::create([
             'training_id' => $pelatihan->id,
-            'name' => 'Kelompok '.$pelatihan->id,
+            'name' => 'Kelompok ' . $pelatihan->id,
             'created_at' => Carbon::now()->format('Y-m-d H:i:s'),
             'updated_at' => Carbon::now()->format('Y-m-d H:i:s')
         ]);
@@ -116,7 +120,34 @@ class AdminController extends Controller
         return redirect()->route('input_pelatihan')->with('success', 'Training berhasil di tambahkan');
     }
 
+    public function insertDokumentasi(Request $request)
+    {
+        $data = $request->all();
+        $formfield = Validator::make($data, [
+            'foto' => 'required|file|mimes:jpg,jpeg,png'
+        ]);
 
+        if ($formfield->fails()) {
+            return back()->withErrors($formfield)->withInput();
+        }
+
+        if ($request->hasFile('foto')) {
+            $photo = $request->file('foto');
+            $photo_name = $photo->getClientOriginalName();
+            $photo->move(public_path('images'), $photo_name);
+            $data['foto'] = $photo_name;
+        }
+
+        Documentation::create($data);
+        return redirect()->route('documentations')->with('success', 'Data berhasil di tambahkan');
+    }
+
+    public function deleteDokumentasi($id)
+    {
+        $dokumentasi = Documentation::find($id);
+        $dokumentasi->delete();
+        return redirect()->route('documentations')->with('success', 'Data berhasil dihapus');
+    }
 
     /**
      * Show the form for editing the specified resource.

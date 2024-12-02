@@ -13,20 +13,19 @@
     </div>
   </div>
 
-  {{-- Search --}}
   <div class="flex flex-row justify-end items-center mt-10 me-40 text-gray-500">
-    <div class="mb-3">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-4">
-        <path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-      </svg>
-    </div>
-
-    <form class="w-[200px] max-w-sm">
+    <form class="w-[200px] max-w-sm" id="searchForm">
       <div class="flex items-center border-b border-grey-500 py-2">
-        <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="search" aria-label="Full name">
+        <input
+          id="searchQuery"
+          class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none"
+          type="text"
+          placeholder="Search..."
+          aria-label="Search">
       </div>
     </form>
   </div>
+
 
   <!-- Jadwal Misa Section -->
   <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 m-12 mt-5">
@@ -140,6 +139,122 @@
 
     function closeModal(modalId) {
       document.getElementById(modalId).classList.add('hidden');
+    }
+
+
+    document.getElementById('searchQuery').addEventListener('input', function() {
+      const query = this.value;
+
+      // Perform an AJAX request
+      fetch(`{{ route('misas.search') }}?query=${query}`, {
+          headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+          },
+        })
+        .then((response) => response.json())
+        .then((data) => {
+          const container = document.querySelector('.grid.grid-cols-1');
+          container.innerHTML = ''; // Clear existing results
+
+          // Populate new results
+          data.forEach((misa) => {
+            const misaCard = `
+        <!-- Card -->
+        <div class="bg-[#f6f1e3] p-6 shadow-lg border border-[#002366] rounded-xl w-[300px] h-[200px] mx-auto">
+          <div class="flex justify-end text-sm text-gray-500" onclick="openModal('modal${misa.id}')">
+            <a class="mr-1"><button>detail</button></a>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-3 mt-1">
+              <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25" />
+            </svg>
+          </div>
+          <div class="flex justify-between items-center">
+            <p class="font-bold" style="font-size: 18px">
+              ${new Date(misa.activity_datetime).toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'short',
+                day: 'numeric',
+              })}
+            </p>
+          </div>
+          <div class="mt-2">
+            <div class="flex mb-2">
+              <span class="bg-orange-500 mt-1 h-4 w-4 rounded-full inline-block"></span>
+              <div class="flex flex-col ml-2">
+                <span>${misa.title}</span>
+                <p class="mt-0">${new Date(misa.activity_datetime).toLocaleTimeString('en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })} WIB</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal -->
+        <div id="modal${misa.id}" class="modal hidden fixed inset-0 bg-gray-800 bg-opacity-75 flex items-center justify-center" onclick="closeModal('modal${misa.id}')">
+          <div class="bg-[#f6f1e3] p-8 rounded-lg w-[700px] h-[400px] relative p-12" onclick="event.stopPropagation()">
+            <button class="absolute top-4 right-4 text-black" onclick="closeModal('modal${misa.id}')">&#10005;</button>
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Left column: Event details -->
+              <div class="text-left">
+                <div class="flex items-center">
+                  <span class="bg-orange-500 h-7 w-7 rounded-full inline-block"></span>
+                  <h2 class="text-2xl font-bold ml-2">${misa.title}</h2>
+                </div>
+                <div class="ms-9">
+                  <!-- Custom date format: dd-MMM-yyyy with dashes -->
+                  <p class="mt-2 text-lg">${formatDate(new Date(misa.activity_datetime))}</p>
+                  <p class="font-bold">${new Date(misa.activity_datetime).toLocaleTimeString('en-US', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })} WIB</p>
+                </div>
+              </div>
+
+              <!-- Right column: Task details -->
+              <div class="text-left">
+                <p class="text-xl font-bold">Yang bertugas saat ini:</p>
+                ${
+                  misa.misaDetails?.length > 0
+                  ? misa.misaDetails.map(
+                    (detail) => `
+                      <p class="mt-2"><span class="font-bold">${detail.roles}:</span></p>
+                      <ul>
+                        <li>${detail.account?.name || 'Tidak ada personel'}</li>
+                      </ul>
+                    `
+                  ).join('')
+                  : '<p class="mt-2">Tidak ada personel yang bertugas</p>'
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+            container.innerHTML += misaCard;
+          });
+        })
+        .catch((error) => console.error('Error fetching data:', error));
+    });
+
+    // Modal control functions
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    // Custom function to format the date as dd-MMM-yyyy with dashes (e.g., 02-dec-2024)
+    function formatDate(date) {
+      const day = date.getDate().toString().padStart(2, '0'); // Ensure two digits for day
+      const month = date.toLocaleString('en-US', {
+        month: 'short'
+      }).toLowerCase(); // Get short month in lowercase
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
     }
   </script>
   @endsection

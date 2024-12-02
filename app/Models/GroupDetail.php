@@ -11,6 +11,12 @@ class GroupDetail extends Pivot
 {
     use HasFactory;
 
+    protected $table = 'group_details'; // Explicitly set the table name
+
+    protected $fillable = ['group_id', 'account_id'];
+
+
+
     public function group(): BelongsTo {
         return $this->belongsTo(Group::class);
     }

@@ -16,7 +16,8 @@ class TemplateController extends Controller
     public function index()
     {
         $templates = Template::where('status', 1)->get();
-        return view('admin.khusus_pengurus.dokumen_pengurus', compact('templates'));
+        $user = Auth::guard('admin')->user();
+        return view('admin.khusus_pengurus.dokumen_pengurus', compact('templates', 'user'));
     }
 
     /**

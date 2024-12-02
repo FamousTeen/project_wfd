@@ -77,8 +77,9 @@ class MisaDetailController extends Controller
 
     /* SHOW EVALUATION FOR ADMIN */
     public function showEvalAdmin() {
+        $user = Auth::guard('admin')->user();
         $misa = Misa::all();
-        return view('admin.list_evaluasi')->with('misa', $misa);
+        return view('admin.list_evaluasi', compact('misa', 'user'));
     }
 
 
