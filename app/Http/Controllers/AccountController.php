@@ -153,8 +153,6 @@ class AccountController extends Controller
         // Fetch data specific to account user
         $dashboardData = Account::find($user->id);
 
-        $saldo = Saldo::where('user_id', $user->id)->sum('');
-
         // Pass the data to the account dashboard view
         return view('anggota.dashboard', [
             'user' => $user,
