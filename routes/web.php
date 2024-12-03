@@ -8,8 +8,6 @@ use App\Models\Account;
 use App\Models\Training;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\SaldoController;
-use App\Http\Controllers\TransactionController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\EventResource;
 use Illuminate\Support\Facades\Route;
@@ -20,12 +18,15 @@ use App\Http\Resources\TrainingResource;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GroupController;
+use App\Http\Controllers\SaldoController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\AdminSaldoController;
 use App\Http\Controllers\MisaDetailController;
 use App\Http\Controllers\EventDetailController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\AnnouncementController;
 
 /*
@@ -369,9 +370,18 @@ Route::post('/saldo', [SaldoController::class, 'store'])->name('saldo.store');
 
 Route::get('/saldo/{accountId}', [SaldoController::class, 'getSaldo']);
 
-Route::put('/saldo/{accountId}', [SaldoController::class, 'updateSaldo']);
+Route::put('/saldo/{accountId}', [SaldoController::class, 'updateSaldo'])->name('saldo.update');
 
 Route::get('/saldo', [SaldoController::class, 'index'])->name('saldo.index');
+
+Route::get('/admin/saldos', [AdminSaldoController::class, 'index'])->name('admin.saldo');
+
+Route::put('/update-saldo/{id}', [AdminSaldoController::class, 'updateSaldo'])->name('updateSaldo');
+
+Route::get('/transactions', [SaldoController::class, 'transactionHistory'])->name('transactions.index');
+
+Route::get('/admin/transaction-list', [TransactionController::class, 'listAll'])->name('admin.transaction.list');
+
 
 Route::post('/store_training', [AdminController::class, 'storeTraining'])->name('store_training');
 

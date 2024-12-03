@@ -134,8 +134,8 @@
                         <img src="../../../asset/addIcon.png" alt="Add Jadwal Icon" class="h-6 w-6 mr-4">
                         Input Jadwal
                     </div>
-                    <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
                         </path>
                     </svg>
@@ -146,8 +146,8 @@
                             Jadwal Misa</a></li>
                     <li><a href="{{ route('input_event') }}" class="block text-[#f6f1e3] hover:text-[#ae0001]">Input
                             Jadwal Acara</a></li>
-                    <li><a href="{{ route('input_pelatihan') }}"
-                            class="block text-[#f6f1e3] hover:text-[#ae0001]">Input Jadwal Pelatihan</a></li>
+                    <li><a href="{{ route('input_pelatihan') }}" class="block text-[#f6f1e3] hover:text-[#ae0001]">Input
+                            Jadwal Pelatihan</a></li>
                     <li><a href="{{ route('input_anggota_pelatihan') }}"
                             class="block text-[#f6f1e3] hover:text-[#ae0001]">Daftar Anggota Pelatihan</a></li>
                 </ul>
@@ -159,8 +159,8 @@
                         <img src="../../../asset/admin_only.png" alt="Add Jadwal Icon" class="h-6 w-6 mr-4">
                         Khusus Pengurus
                     </div>
-                    <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor"
-                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <svg class="w-4 h-4 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                        xmlns="http://www.w3.org/2000/svg">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7">
                         </path>
                     </svg>
@@ -176,8 +176,7 @@
                 </ul>
             </li>
             <li>
-                <a href="{{ route('documentations') }}"
-                    class="flex items-center text-[#f6f1e3]  hover:text-[#ae0001]">
+                <a href="{{ route('documentations') }}" class="flex items-center text-[#f6f1e3]  hover:text-[#ae0001]">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="size-6 mr-4">
                         <path stroke-linecap="round" stroke-linejoin="round"
@@ -194,10 +193,22 @@
                 </a>
             </li>
             <li>
-                <a href="{{ route('list_evaluasi') }}"
-                    class="flex items-center text-[#f6f1e3]  hover:text-[#ae0001]">
+                <a href="{{ route('list_evaluasi') }}" class="flex items-center text-[#f6f1e3]  hover:text-[#ae0001]">
                     <img src="../../../asset/evaluasi.png" alt="Evaluasi Icon" class="h-6 w-6 mr-4">
                     Evaluasi
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.transaction.list') }}"
+                    class="flex items-center text-[#f6f1e3] hover:text-[#ae0001]">
+                    <img src="../../../asset/transactions.png" alt="Transactions Icon" class="h-6 w-6 mr-4">
+                    Transactions
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.saldo') }}" class="flex items-center text-[#f6f1e3] hover:text-[#ae0001]">
+                    <img src="../../../asset/saldo.png" alt="Saldo Icon" class="h-6 w-6 mr-4">
+                    Admin Saldo
                 </a>
             </li>
         </ul>

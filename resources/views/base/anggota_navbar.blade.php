@@ -102,7 +102,8 @@
         </div>
         <ul class="space-y-8">
             <li>
-                <a href="{{ route('account.dashboard') }}" class="flex text-[#f6f1e3] items-center hover:text-[#ae0001]">
+                <a href="{{ route('account.dashboard') }}"
+                    class="flex text-[#f6f1e3] items-center hover:text-[#ae0001]">
                     <img src="../../../asset/dashboard.png" alt="Dashboard Icon" class="h-6 w-6 mr-4">
                     Dashboard
                 </a>
@@ -123,8 +124,10 @@
                 <ul id="konfirmasiDropdown" class="mt-2 ml-8 mt-4 space-y-4 hidden">
                     <li><a href="{{ route('jadwal_anggota') }}" class="block text-[#f6f1e3] hover:text-[#ae0001]">Jadwal
                             Tugasku</a></li>
-                    <li><a href="{{ route('konfirmasi')}}" class="block text-[#f6f1e3] hover:text-[#ae0001]">Konfirmasi Tugas</a></li>
-                    <li><a href="{{ route('jadwal_pelatihan')}}" class="block text-[#f6f1e3] hover:text-[#ae0001]">Pelatihan</a></li>
+                    <li><a href="{{ route('konfirmasi')}}" class="block text-[#f6f1e3] hover:text-[#ae0001]">Konfirmasi
+                            Tugas</a></li>
+                    <li><a href="{{ route('jadwal_pelatihan')}}"
+                            class="block text-[#f6f1e3] hover:text-[#ae0001]">Pelatihan</a></li>
                 </ul>
             </li>
             <li>
@@ -138,6 +141,13 @@
                     class="flex items-center text-[#f6f1e3]  hover:text-[#ae0001]">
                     <img src="../../../asset/evaluasi.png" alt="Evaluasi Icon" class="h-6 w-6 mr-4">
                     Evaluasi
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('transactions.index') }}"
+                    class="flex items-center text-[#f6f1e3] hover:text-[#ae0001]">
+                    <img src="../../../asset/transactions.png" alt="Transactions Icon" class="h-6 w-6 mr-4">
+                    Riwayat Transaksi
                 </a>
             </li>
         </ul>
