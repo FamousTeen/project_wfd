@@ -22,4 +22,12 @@ class Transaction extends Model
     {
         return $this->belongsTo(Account::class);
     }
+
+    public function user()
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
+
+
+
 }

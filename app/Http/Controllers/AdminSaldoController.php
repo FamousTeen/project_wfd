@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Saldo;
+use App\Models\Transaction;
 use Illuminate\Http\Request;
 
 class AdminSaldoController extends Controller
@@ -20,11 +21,26 @@ class AdminSaldoController extends Controller
         ]);
     
         $saldo = Saldo::findOrFail($id);
-        $saldo->amount = $validated['amount'];
-        $saldo->save();
     
-        return redirect()->back()->with('success', 'Saldo updated successfully.');
+        // Calculate the difference between the old and new amount
+        $difference = $validated['amount'] - $saldo->amount;
+    
+        if ($difference != 0) { // Proceed only if there's a change
+            // Log the transaction for this account
+            $transaction = new Transaction();
+            $transaction->account_id = $saldo->account_id; // Assumes Saldo is linked to a user/account
+            $transaction->amount = abs($difference);
+            $transaction->type = $difference > 0 ? 'credit' : 'debit';
+            $transaction->save();
+    
+            // Update the saldo amount
+            $saldo->amount = $validated['amount'];
+            $saldo->save();
+        }
+    
+        return redirect()->back()->with('success', 'Saldo updated successfully and transaction history recorded.');
     }
+    
     
 
 
