@@ -4,9 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Models\Saldo;
 use App\Models\Account;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Transaction;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class SaldoController extends Controller
 {
@@ -55,31 +56,30 @@ class SaldoController extends Controller
 
     public function updateSaldo(Request $request, $accountId)
     {
-        // Validasi input
+        // Validate input
         $validated = $request->validate([
             'amount' => 'required|numeric|min:0',
         ]);
 
         $user = Auth::guard('account')->user();
 
-        // Mencari saldo yang terkait dengan account_id
-        // Retrieve saldo for the current user
+        // Retrieve saldo for the user, if exists
         $saldo = Saldo::where('account_id', $user->id)->first();
 
         if ($saldo) {
-            // Update saldo by adding the top-up amount
+            // If saldo exists, update it
             $saldo->update([
                 'amount' => $saldo->amount + $validated['amount'],
             ]);
         } else {
-            // Create new saldo if none exists
+            // If saldo doesn't exist, create a new one
             $saldo = Saldo::create([
                 'account_id' => $user->id,
                 'amount' => $validated['amount'],
             ]);
         }
 
-        // Record the transaction
+        // Record the transaction (log the top-up transaction)
         Transaction::create([
             'account_id' => $user->id,
             'type' => 'credit',
@@ -89,6 +89,7 @@ class SaldoController extends Controller
         return redirect()->route('saldo.index')->with('success', 'Saldo berhasil diperbarui!');
     }
 
+
     public function transactionHistory()
     {
         $user = Auth::guard('account')->user();
@@ -96,6 +97,5 @@ class SaldoController extends Controller
 
         return view('anggota.transactions', compact('transactions'));
     }
-
 
 }

@@ -13,6 +13,9 @@ class CreateTransactionsTable extends Migration
             $table->unsignedBigInteger('account_id');
             $table->enum('type', ['credit', 'debit']); // credit for top-up, debit for spending
             $table->decimal('amount', 15, 2); // to store saldo changes
+            $table->enum('status', ['pending', 'success', 'failed']);
+            $table->string('order_id')->nullable()->unique();
+            $table->string('snap_token')->nullable();
             $table->timestamps();
 
             // Foreign key constraint

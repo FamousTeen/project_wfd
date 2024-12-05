@@ -13,6 +13,9 @@ class Transaction extends Model
         'account_id',
         'type',
         'amount',
+        'status',
+        'snap_token',
+        'order_id'
     ];
 
     public function account()

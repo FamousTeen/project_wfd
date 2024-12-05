@@ -14,4 +14,6 @@ class TransactionController extends Controller
 
         return view('admin.transaction_list', ['transactions' => $transactions]);
     }
+
+    
 }

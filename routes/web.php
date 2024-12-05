@@ -20,6 +20,7 @@ use App\Http\Controllers\EventController;
 use App\Http\Controllers\GroupController;
 use App\Http\Controllers\SaldoController;
 use App\Http\Controllers\AccountController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\TemplateController;
 use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\DashboardController;
@@ -416,3 +417,11 @@ Route::get('/admin/delete_dokumentasi/{id}', [AdminController::class, 'deleteDok
 Route::get('/groups/members/{group}', [GroupController::class, 'getAvailableMembers'])->name('groups.availableMembers');
 Route::get('/groups/create', [GroupController::class, 'create'])->name('groups.create'); // Show the create group modal
 Route::get('/groups/{groupId}/details', [GroupController::class, 'getDetails']);
+
+Route::post('/create-payment', [PaymentController::class, 'createPayment'])->name('payment.create');
+
+Route::post('/update-transaction-and-saldo', [PaymentController::class, 'updateTransactionAndSaldo']);
+
+
+
+
