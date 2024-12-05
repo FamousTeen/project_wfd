@@ -32,17 +32,19 @@ $saldo = Saldo::where('account_id', $user->id)->first();
             </a>
             @else
             <!-- Open modal when clicked -->
+            <a href="{{ route('saldo.index') }}">
             <button
                 class="bg-green-500 text-white p-3 rounded-lg hover:bg-green-600"
                 onclick="document.getElementById('createSaldoModal').classList.remove('hidden')">
                 Buat Saldo Baru
             </button>
+            </a>    
             @endif
         </div>
     </div>
 
     <!-- Create Saldo Modal -->
-    <div id="createSaldoModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+    <!-- <div id="createSaldoModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
         <div class="bg-white p-8 rounded-lg shadow-lg w-96">
             <h2 class="text-xl font-semibold mb-4">Buat Saldo Baru</h2>
             <form action="{{ route('saldo.store') }}" method="POST">
@@ -72,7 +74,7 @@ $saldo = Saldo::where('account_id', $user->id)->first();
                 </div>
             </form>
         </div>
-    </div>
+    </div> -->
 </div>
 
 <!-- Main Layout: Left and Right Sides -->
