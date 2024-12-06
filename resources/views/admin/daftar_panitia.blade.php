@@ -6,7 +6,8 @@
 @endsection
 
 @section('content')
-    <div class="pt-20">
+    <div class="pt-24 px-5">
+        <h1 class="font-bold text-4xl">Data Panitia Kegiatan</h1>
         <div class="flex flex-col w-full py-8 rounded-lg shadow-xl items-center justify-center mb-10 px-10">
             <select id="event" data-te-select-init>
                 <option value="all">All Event</option>
@@ -24,6 +25,27 @@
             </div>
 
             <div id="datatable" class="relative w-full py-5 z-[2]" data-te-fixed-header="true"></div>
+
+        </div>
+
+        <h1 class="font-bold text-4xl">Data Panitia Misa</h1>
+        <div class="flex flex-col w-full py-8 rounded-lg shadow-xl items-center justify-center mb-10 px-10">
+            <select id="misa" data-te-select-init>
+                <option value="all">All Misa</option>
+                @foreach ($misas as $misa)
+                    <option value="{{ $misa->id }}">{{ $misa->title }}</option>
+                @endforeach
+            </select>
+            <div class="w-full relative my-3 mx-5" data-twe-input-wrapper-init>
+                <input type="search"
+                    class="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary data-[twe-input-state-active]:placeholder:opacity-100 motion-reduce:transition-none dark:text-white dark:placeholder:text-neutral-300 dark:peer-focus:text-primary [&:not([data-twe-input-placeholder-active])]:placeholder:opacity-0 dark:autofill:shadow-autofill"
+                    id="datatable-search-input" placeholder="Search" />
+                <label for="datatable-search-input"
+                    class="pointer-events-none absolute left-3 top-0 mb-0 max-w-[90%] origin-[0_0] truncate pt-[0.37rem] leading-[1.6] text-neutral-500 transition-all duration-200 ease-out peer-focus:-translate-y-[0.9rem] peer-focus:scale-[0.8] peer-focus:text-primary peer-data-[twe-input-state-active]:-translate-y-[0.9rem] peer-data-[twe-input-state-active]:scale-[0.8] motion-reduce:transition-none dark:text-neutral-400 dark:peer-focus:text-primary">Search
+                </label>
+            </div>
+
+            <div id="datatableMisa" class="relative w-full py-5 z-[2]" data-te-fixed-header="true"></div>
 
         </div>
     </div>
@@ -44,7 +66,31 @@
                             name: item.account.name,
                             email: item.account.email,
                             address: item.account.address,
-                            event: item.event.title
+                            event: item.event.title,
+                            role: item.roles
+                        };
+
+                        return rowData;
+                    })
+                }, {
+                    hover: true,
+                    stripped: true
+                },
+            );
+        }
+
+        function initTableMisa(data) {
+            return new te.Datatable(
+                dataTableMisa, {
+                    columns: columnMisa,
+                    rows: data.map((item, index) => {
+                        const rowData = {
+                            no: index + 1,
+                            name: item.account.name,
+                            email: item.account.email,
+                            address: item.account.address,
+                            misa: item.misa.title,
+                            role: item.roles
                         };
 
                         return rowData;
@@ -61,7 +107,6 @@
         const dataTable = document.getElementById('datatable');
         const eventDetails = @json($eventDetails);
         console.log(eventDetails);
-
 
         const column = [{
             label: "No",
@@ -83,6 +128,10 @@
             label: "Event",
             field: "event",
             sort: true
+        }, {
+            label: "Role",
+            field: "role",
+            sort: true
         }];
 
         var table = initTable(eventDetails);
@@ -99,6 +148,48 @@
 
             dataTable.replaceChildren();
             table = initTable(event_filtered);
+
+        });
+
+        const dataTableMisa = document.getElementById('datatableMisa');
+        const misaDetails = @json($misaDetails);
+        console.log(misaDetails);
+        const columnMisa = [{
+            label: "No",
+            field: "no",
+            sort: true
+        }, {
+            label: "Name",
+            field: "name",
+            sort: true
+        }, {
+            label: "Email",
+            field: "email",
+            sort: true
+        }, {
+            label: "Address",
+            field: "address",
+            sort: true
+        }, {
+            label: "Misa",
+            field: "misa",
+            sort: true
+        }, {
+            label: "Role",
+            field: "role",
+            sort: true
+        }];
+
+        var tableMisa = initTableMisa(misaDetails);
+
+        document.getElementById('misa').addEventListener('change', function() {
+            let misa_filtered = misaDetails;
+            if (this.value != 'all') {
+                misa_filtered = misaDetails.filter(item => item.misa_id == this.value);
+            }
+
+            dataTableMisa.replaceChildren();
+            tableMisa = initTableMisa(misa_filtered);
 
         });
     </script>

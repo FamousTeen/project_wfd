@@ -14,6 +14,7 @@ use App\Models\Event;
 use App\Models\EventDetail;
 use App\Models\Group;
 use App\Models\Misa;
+use App\Models\Misa_Detail;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
@@ -248,6 +249,9 @@ class AdminController extends Controller
     public function daftar_panitia() {
         $data['eventDetails'] = EventDetail::with(['event', 'account'])->get();
         $data['events'] = Event::all();
+
+        $data['misaDetails'] = Misa_Detail::with(['misa', 'account'])->get();
+        $data['misas'] = Misa::all();
         return view('admin.daftar_panitia', $data);
     }
 
