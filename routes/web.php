@@ -422,8 +422,8 @@ Route::post('/create-payment', [PaymentController::class, 'createPayment'])->nam
 
 Route::post('/update-transaction-and-saldo', [PaymentController::class, 'updateTransactionAndSaldo']);
 
-Route::get('/admin/daftar_panitia', [AdminController::class, 'daftar_panitia']);
-Route::get('/admin/data_misa', [AdminController::class, 'data_misa']);
+Route::get('/admin/daftar_panitia', [AdminController::class, 'daftar_panitia'])->name('admin.panitia.data');
+Route::get('/admin/data_misa', [AdminController::class, 'data_misa'])->name('admin.misa');
 
 
 

@@ -211,6 +211,18 @@
                     Admin Saldo
                 </a>
             </li>
+            <li>
+                <a href="{{ route('admin.panitia.data') }}" class="flex items-center text-[#f6f1e3] hover:text-[#ae0001]">
+                    <img src="" alt="Panitia Icon" class="h-6 w-6 mr-4">
+                    Admin Data Panitia
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.misa') }}" class="flex items-center text-[#f6f1e3] hover:text-[#ae0001]">
+                    <img src="" alt="Misa Icon" class="h-6 w-6 mr-4">
+                    Admin Data Misa
+                </a>
+            </li>
         </ul>
     </div>
 
