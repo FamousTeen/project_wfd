@@ -422,6 +422,8 @@ Route::post('/create-payment', [PaymentController::class, 'createPayment'])->nam
 
 Route::post('/update-transaction-and-saldo', [PaymentController::class, 'updateTransactionAndSaldo']);
 
+Route::get('/admin/daftar_panitia', [AdminController::class, 'daftar_panitia']);
+
 
 
 

@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreAdminRequest;
 use App\Models\Documentation;
+use App\Models\Event;
+use App\Models\EventDetail;
 use App\Models\Group;
 use Illuminate\Support\Facades\Validator;
 
@@ -240,5 +242,11 @@ class AdminController extends Controller
             'data' => $dashboardData
         ]);
         // }
+    }
+
+    public function daftar_panitia() {
+        $data['eventDetails'] = EventDetail::with(['event', 'account'])->get();
+        $data['events'] = Event::all();
+        return view('admin.daftar_panitia', $data);
     }
 }
