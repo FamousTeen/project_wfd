@@ -13,6 +13,7 @@ use App\Models\Documentation;
 use App\Models\Event;
 use App\Models\EventDetail;
 use App\Models\Group;
+use App\Models\Misa;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
@@ -248,5 +249,12 @@ class AdminController extends Controller
         $data['eventDetails'] = EventDetail::with(['event', 'account'])->get();
         $data['events'] = Event::all();
         return view('admin.daftar_panitia', $data);
+    }
+
+    public function data_misa() {
+        $data['misas'] = Misa::where('active', 1)->orderBy('activity_datetime')->get();
+        $data['categories'] = Misa::select('category')->distinct()->get();
+
+        return view('admin.data_misa', $data);
     }
 }
