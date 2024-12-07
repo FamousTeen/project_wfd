@@ -252,13 +252,16 @@ class AdminController extends Controller
 
         $data['misaDetails'] = Misa_Detail::with(['misa', 'account'])->get();
         $data['misas'] = Misa::all();
+        $user = Auth::guard('admin')->user();
+        $data['user'] = $user;
         return view('admin.daftar_panitia', $data);
     }
 
     public function data_misa() {
         $data['misas'] = Misa::where('active', 1)->orderBy('activity_datetime')->get();
         $data['categories'] = Misa::select('category')->distinct()->get();
-
+        $user = Auth::guard('admin')->user();
+        $data['user'] = $user;
         return view('admin.data_misa', $data);
     }
 }

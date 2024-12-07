@@ -59,6 +59,9 @@
                         @if (isset($user))
                             <img src="{{ asset('asset/' . $user->photo) }}" alt="Profile Icon"
                                 class="h-8 w-8 rounded-full bg-[#f6f1e3]">
+                        @elseif (isset($data))
+                            <img src="{{ asset('asset/' . $data['user']) }}" alt="Profile Icon"
+                                class="h-8 w-8 rounded-full bg-[#f6f1e3]">        
                         @else
                             <img src="../../../asset/profile-circle.256x256.png" alt="Profile Icon"
                                 class="h-8 w-8 rounded-full bg-[#f6f1e3]">
@@ -201,25 +204,29 @@
             <li>
                 <a href="{{ route('admin.transaction.list') }}"
                     class="flex items-center text-[#f6f1e3] hover:text-[#ae0001]">
-                    <img src="../../../asset/transactions.png" alt="Transactions Icon" class="h-6 w-6 mr-4">
+                    <!-- <img src="../../../asset/transactions.png" alt="Transactions Icon" class="h-6 w-6 mr-4"> -->
+                    <svg class="h-6 w-6 mr-4" xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"><path d="M39 6H9a3 3 0 0 0-3 3v30a3 3 0 0 0 3 3h30a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3"/><path d="m21 31l5 4l8-10M14 15h20m-20 8h8"/></g></svg>
                     Transactions
                 </a>
             </li>
             <li>
                 <a href="{{ route('admin.saldo') }}" class="flex items-center text-[#f6f1e3] hover:text-[#ae0001]">
-                    <img src="../../../asset/saldo.png" alt="Saldo Icon" class="h-6 w-6 mr-4">
+                <svg class="h-6 w-6 mr-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M12 21.5a9.5 9.5 0 1 0 0-19a9.5 9.5 0 0 0 0 19"/><path d="M9 14.433a2.82 2.82 0 0 0 3 2.57c2.42 0 3-1.39 3-2.57s-1-2.43-3-2.43s-3-.79-3-2.4a2.75 2.75 0 0 1 3-2.6a2.89 2.89 0 0 1 3 2.6M12 18.5v-1.3m0-11.7v1.499"/></g></svg>
+                    <!-- <img src="../../../asset/saldo.png" alt="Saldo Icon" class="h-6 w-6 mr-4"> -->
                     Admin Saldo
                 </a>
             </li>
             <li>
                 <a href="{{ route('admin.panitia.data') }}" class="flex items-center text-[#f6f1e3] hover:text-[#ae0001]">
-                    <img src="" alt="Panitia Icon" class="h-6 w-6 mr-4">
+                <svg class="h-6 w-6 mr-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M5.616 20q-.691 0-1.153-.462T4 18.384V5.616q0-.691.463-1.153T5.616 4h12.769q.69 0 1.153.463T20 5.616v12.769q0 .69-.462 1.153T18.384 20zm5.884-5.596H5v3.98q0 .27.173.443t.443.173H11.5zm1 0V19h5.885q.269 0 .442-.173t.173-.442v-3.981zm-1-1V8.769H5v4.635zm1 0H19V8.769h-6.5zM5 7.769h14V5.615q0-.269-.173-.442T18.385 5H5.615q-.269 0-.442.173T5 5.616z"/></svg>
+                    <!-- <img src="" alt="Panitia Icon" class="h-6 w-6 mr-4"> -->
                     Admin Data Panitia
                 </a>
             </li>
             <li>
                 <a href="{{ route('admin.misa') }}" class="flex items-center text-[#f6f1e3] hover:text-[#ae0001]">
-                    <img src="" alt="Misa Icon" class="h-6 w-6 mr-4">
+                <svg class="h-6 w-6 mr-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="currentColor" d="M5.616 20q-.691 0-1.153-.462T4 18.384V5.616q0-.691.463-1.153T5.616 4h12.769q.69 0 1.153.463T20 5.616v12.769q0 .69-.462 1.153T18.384 20zm5.884-5.596H5v3.98q0 .27.173.443t.443.173H11.5zm1 0V19h5.885q.269 0 .442-.173t.173-.442v-3.981zm-1-1V8.769H5v4.635zm1 0H19V8.769h-6.5zM5 7.769h14V5.615q0-.269-.173-.442T18.385 5H5.615q-.269 0-.442.173T5 5.616z"/></svg>
+                    <!-- <img src="" alt="Misa Icon" class="h-6 w-6 mr-4"> -->
                     Admin Data Misa
                 </a>
             </li>

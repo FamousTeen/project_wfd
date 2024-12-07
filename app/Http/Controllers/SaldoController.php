@@ -95,7 +95,7 @@ class SaldoController extends Controller
         $user = Auth::guard('account')->user();
         $transactions = Transaction::where('account_id', $user->id)->orderBy('created_at', 'desc')->get();
 
-        return view('anggota.transactions', compact('transactions'));
+        return view('anggota.transactions', compact('transactions', 'user'));
     }
 
 }

@@ -12,7 +12,7 @@
         <table class="table-auto w-full border-collapse border border-gray-300">
             <thead>
                 <tr class="bg-gray-100">
-                    <th class="border border-gray-300 px-4 py-2">ID</th>
+                    <th class="border border-gray-300 px-4 py-2">Name</th>
                     <th class="border border-gray-300 px-4 py-2">Amount</th>
                     <th class="border border-gray-300 px-4 py-2">Date</th>
                     <th class="border border-gray-300 px-4 py-2">Action</th>
@@ -21,7 +21,7 @@
             <tbody>
                 @foreach ($saldos as $item)
                 <tr>
-                    <td class="border border-gray-300 px-4 py-2">{{ $item->id }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ $item->account->name }}</td>
                     <td class="border border-gray-300 px-4 py-2 text-right">{{ number_format($item->amount, 0, ',', '.') }}</td>
                     <td class="border border-gray-300 px-4 py-2 text-center">{{ $item->created_at->format('d/m/Y') }}</td>
                     <td class="border border-gray-300 px-4 py-2 text-center">

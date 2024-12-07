@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Saldo;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminSaldoController extends Controller
 {
     public function index()
     {
         $saldos = Saldo::with('account')->get(); // Fetch all saldo records
-        return view('admin.admin_saldo', compact('saldos'));
+        $user = Auth::guard('admin')->user();
+        return view('admin.admin_saldo', compact('saldos', 'user'));
     }
 
     public function updateSaldo(Request $request, $id)

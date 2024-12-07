@@ -9,6 +9,7 @@ use App\Models\Training;
 @php
 use App\Models\Saldo;
 $saldo = Saldo::where('account_id', $user->id)->first();
+
 @endphp
 <!-- Colors:
                 1. #740001 - merah gelap
